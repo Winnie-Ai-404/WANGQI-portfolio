@@ -18,10 +18,6 @@ export function WorksBrowser({ projects, tags }: WorksBrowserProps) {
     return projects.filter((project) => project.tags.includes(activeTag))
   }, [activeTag, projects])
 
-  const featured = filteredProjects.filter((project) => project.featured)
-  const explorations = filteredProjects.filter((project) => project.exploration)
-  const isAll = activeTag === 'All'
-
   return (
     <div className="space-y-10">
       <section className="space-y-5">
@@ -56,36 +52,12 @@ export function WorksBrowser({ projects, tags }: WorksBrowserProps) {
         <section className="surface-panel space-y-3 p-8">
           <h2 className="text-2xl font-medium tracking-tight text-text-primary">No matches found</h2>
           <p className="text-text-secondary">
-            Try another tag to browse additional case studies and explorations.
+            Try another tag to browse additional projects.
           </p>
         </section>
-      ) : isAll ? (
-        <>
-          <section className="space-y-6">
-            <h2 className="text-3xl font-medium tracking-tight text-text-primary">Featured projects</h2>
-            <div className="grid gap-6 lg:grid-cols-2">
-              {featured.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-3xl font-medium tracking-tight text-text-primary">
-              Selected explorations
-            </h2>
-            <div className="grid gap-6 lg:grid-cols-2">
-              {explorations.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
-          </section>
-        </>
       ) : (
         <section className="space-y-6">
-          <h2 className="text-3xl font-medium tracking-tight text-text-primary">
-            Matching projects: {activeTag}
-          </h2>
+          <h2 className="text-3xl font-medium tracking-tight text-text-primary">Projects</h2>
           <div className="grid gap-6 lg:grid-cols-2">
             {filteredProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />

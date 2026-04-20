@@ -22,7 +22,7 @@ export function HeroAtmosphere({ accent }: HeroAtmosphereProps) {
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute bottom-[8%] right-[10%] h-56 w-56 rounded-full bg-[#e9e5dd]/85 blur-3xl"
+        className="absolute bottom-[8%] right-[10%] h-56 w-56 rounded-full bg-[#1c233c]/85 blur-3xl"
         animate={shouldReduceMotion ? undefined : { x: [0, -16, 0], y: [0, 10, 0] }}
         transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
       />

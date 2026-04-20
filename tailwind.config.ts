@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         bg: 'var(--color-bg)',
         surface: 'var(--color-surface)',
+        accent: 'var(--color-accent)',
         text: {
           primary: 'var(--color-text-primary)',
           secondary: 'var(--color-text-secondary)',
@@ -22,8 +23,8 @@ const config: Config = {
         xlsoft: '24px',
       },
       boxShadow: {
-        soft: '0 12px 28px rgba(23, 23, 23, 0.05)',
-        whisper: '0 4px 14px rgba(23, 23, 23, 0.04)',
+        soft: '0 20px 42px rgba(0, 0, 0, 0.36)',
+        whisper: '0 8px 24px rgba(0, 0, 0, 0.28)',
       },
       maxWidth: {
         shell: '1280px',

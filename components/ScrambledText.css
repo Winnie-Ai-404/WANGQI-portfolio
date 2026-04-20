@@ -1,0 +1,18 @@
+.text-block {
+  margin: 0;
+  max-width: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.char {
+  will-change: transform;
+  display: inline-block;
+}
+
+.scrambled-text-line {
+  margin: 0;
+  line-height: inherit;
+  letter-spacing: inherit;
+}

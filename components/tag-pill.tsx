@@ -10,7 +10,7 @@ export function TagPill({ label, accent }: TagPillProps) {
       style={{
         borderColor: accent ? `${accent}44` : undefined,
         backgroundColor: accent ? `${accent}12` : undefined,
-        color: accent ? '#171717' : undefined,
+        color: accent ? '#f2f2f2' : undefined,
       }}
     >
       {label}

@@ -1,0 +1,17 @@
+.lanyard-wrapper {
+  position: relative;
+  width: 100%;
+  height: min(82vh, 760px);
+}
+
+.lanyard-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .lanyard-wrapper {
+    height: min(72vh, 620px);
+  }
+}
