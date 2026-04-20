@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { ProjectMedia } from '@/data/projects'
+import { withBasePath } from '@/lib/with-base-path'
 import { cn } from '@/lib/utils'
 
 type MediaFrameProps = {
@@ -93,7 +94,7 @@ export function MediaFrame({
               controls
               preload="metadata"
               playsInline
-              src={media.src}
+              src={withBasePath(media.src)}
             />
           ) : (
             <>

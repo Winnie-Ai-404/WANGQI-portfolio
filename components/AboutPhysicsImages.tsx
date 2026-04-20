@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Matter from 'matter-js'
+import { withBasePath } from '@/lib/with-base-path'
 
 type AboutPhysicsImagesProps = {
   activeStepIndex: number
@@ -102,7 +103,7 @@ export default function AboutPhysicsImages({ activeStepIndex }: AboutPhysicsImag
       el.style.height = `${item.height}px`
 
       const img = document.createElement('img')
-      img.src = item.src
+      img.src = withBasePath(item.src)
       img.alt = item.key
       img.className = 'about-physics-item-image'
       img.draggable = false

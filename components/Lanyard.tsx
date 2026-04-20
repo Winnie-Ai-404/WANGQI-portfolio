@@ -14,6 +14,7 @@ import {
 } from '@react-three/rapier'
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline'
 import * as THREE from 'three'
+import { withBasePath } from '@/lib/with-base-path'
 import './Lanyard.css'
 
 extend({ MeshLineGeometry, MeshLineMaterial } as any)
@@ -110,9 +111,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
     linearDamping: 4,
   }
 
-  const { nodes, materials } = useGLTF('/assets/lanyard/card.glb') as any
-  const lanyardTexture = useTexture('/assets/lanyard/lanyard.png')
-  const qrTexture = useTexture('/images/contact/wechat-qr.jpg')
+  const { nodes, materials } = useGLTF(withBasePath('/assets/lanyard/card.glb')) as any
+  const lanyardTexture = useTexture(withBasePath('/assets/lanyard/lanyard.png'))
+  const qrTexture = useTexture(withBasePath('/images/contact/wechat-qr.jpg'))
 
   const [curve] = useState(
     () =>
@@ -266,4 +267,4 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   )
 }
 
-useGLTF.preload('/assets/lanyard/card.glb')
+useGLTF.preload(withBasePath('/assets/lanyard/card.glb'))
