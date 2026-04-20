@@ -35,18 +35,8 @@ jobs:
 
       - name: Build static site
         env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          NEXT_PUBLIC_BASE_PATH: /WANGQI-portfolio
         run: |
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          OWNER_NAME="${GITHUB_REPOSITORY_OWNER}"
-
-          if [ "${REPO_NAME}" = "${OWNER_NAME}.github.io" ]; then
-            echo "NEXT_PUBLIC_BASE_PATH=" >> "$GITHUB_ENV"
-          else
-            echo "NEXT_PUBLIC_BASE_PATH=/${REPO_NAME}" >> "$GITHUB_ENV"
-          fi
-
           npm run build
           touch out/.nojekyll
 
