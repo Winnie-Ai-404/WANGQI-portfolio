@@ -1,13 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import '@/components/BorderGlow.css'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { PageTransition } from '@/components/page-transition'
 import { siteConfig } from '@/data/site'
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html lang="en" className="font-sans">
       <body>
         <div className="min-h-screen bg-bg">
           <a
