@@ -13,7 +13,6 @@ import {
 } from 'framer-motion'
 import { useMemo, useRef, useState } from 'react'
 import type { Project } from '@/data/projects'
-import { withBasePath } from '@/lib/with-base-path'
 
 type HomeProjectShowcaseProps = {
   projects: Project[]
@@ -23,7 +22,6 @@ type ShowcaseEntry = {
   slug: string
   title: string
   summary: string
-  mediaType: 'image' | 'video'
   mediaSrc: string
   mediaAlt: string
   metadata: string
@@ -46,8 +44,7 @@ function toShowcaseEntries(projects: Project[]): ShowcaseEntry[] {
     slug: project.slug,
     title: project.title,
     summary: summaryMap[project.slug] ?? project.subtitle,
-    mediaType: project.hero.video ? 'video' : 'image',
-    mediaSrc: project.hero.video ?? project.hero.image,
+    mediaSrc: project.hero.image,
     mediaAlt: project.hero.imageAlt,
     metadata: metadataMap[project.slug] ?? project.tags.slice(0, 3).join(' / '),
   }))
@@ -73,28 +70,14 @@ function ShowcaseImageLayer({
       style={{ opacity, scale, y }}
     >
       <div className="relative h-[58vh] w-[min(84vw,1080px)] overflow-hidden rounded-[22px] sm:h-[60vh]">
-        {item.mediaType === 'video' ? (
-          <video
-            className="h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload={index === 0 ? 'auto' : 'metadata'}
-            aria-label={item.mediaAlt}
-          >
-            <source src={withBasePath(item.mediaSrc)} />
-          </video>
-        ) : (
-          <Image
-            src={item.mediaSrc}
-            alt={item.mediaAlt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 92vw, 84vw"
-            priority={index === 0}
-          />
-        )}
+        <Image
+          src={item.mediaSrc}
+          alt={item.mediaAlt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 92vw, 84vw"
+          priority={index === 0}
+        />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.16)_100%)]" />
       </div>
     </motion.div>

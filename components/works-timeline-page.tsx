@@ -2,10 +2,9 @@
 
 import Image from '@/components/base-path-image'
 import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { Project } from '@/data/projects'
-import { withBasePath } from '@/lib/with-base-path'
 import { cn } from '@/lib/utils'
 
 type WorksTimelinePageProps = {
@@ -25,7 +24,7 @@ type TimelineProject = {
   domain?: string
   summary: string
   heroMedia: {
-    type: 'image' | 'video'
+    type: 'image'
     src: string
     alt: string
   }
@@ -134,8 +133,8 @@ function toTimelineProjects(projects: Project[]): TimelineProject[] {
       domain: inferDomain(project),
       summary: toCaptionSummary(project.subtitle),
       heroMedia: {
-        type: project.hero.video ? 'video' : 'image',
-        src: project.hero.video ?? project.hero.image,
+        type: 'image',
+        src: project.hero.image,
         alt: project.hero.imageAlt,
       },
       thumbMedia: {
@@ -148,7 +147,6 @@ function toTimelineProjects(projects: Project[]): TimelineProject[] {
 export function WorksTimelinePage({ projects }: WorksTimelinePageProps) {
   const items = useMemo(() => toTimelineProjects(projects), [projects])
   const [activeIndex, setActiveIndex] = useState(0)
-  const [loadedVideoIds, setLoadedVideoIds] = useState<Set<string>>(() => new Set())
   const [hoveredNavIndex, setHoveredNavIndex] = useState<number | null>(null)
   const [scrollParallaxY, setScrollParallaxY] = useState(0)
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -157,14 +155,6 @@ export function WorksTimelinePage({ projects }: WorksTimelinePageProps) {
   const shouldReduceMotion = useReducedMotion()
 
   const activeItem = items[activeIndex]
-  const markVideoAsLoaded = useCallback((projectId: string) => {
-    setLoadedVideoIds((prev) => {
-      if (prev.has(projectId)) return prev
-      const next = new Set(prev)
-      next.add(projectId)
-      return next
-    })
-  }, [])
 
   useEffect(() => {
     return () => {
@@ -241,8 +231,6 @@ export function WorksTimelinePage({ projects }: WorksTimelinePageProps) {
               index={activeIndex}
               shouldReduceMotion={!!shouldReduceMotion}
               driftY={scrollParallaxY}
-              isVideoLoaded={loadedVideoIds.has(activeItem.id)}
-              onVideoDelayPassed={markVideoAsLoaded}
             />
           </div>
         </div>
@@ -273,8 +261,6 @@ export function WorksTimelinePage({ projects }: WorksTimelinePageProps) {
               index={activeIndex}
               shouldReduceMotion={!!shouldReduceMotion}
               driftY={scrollParallaxY}
-              isVideoLoaded={loadedVideoIds.has(activeItem.id)}
-              onVideoDelayPassed={markVideoAsLoaded}
             />
           </div>
         </div>
@@ -376,64 +362,14 @@ function WorksStageVisual({
   index,
   shouldReduceMotion,
   driftY,
-  isVideoLoaded,
-  onVideoDelayPassed,
 }: {
   item: TimelineProject
   index: number
   shouldReduceMotion: boolean
   driftY: number
-  isVideoLoaded: boolean
-  onVideoDelayPassed: (projectId: string) => void
 }) {
   const [hovered, setHovered] = useState(false)
   const [chipPosition, setChipPosition] = useState({ x: 0, y: 0 })
-  const stageVideoRef = useRef<HTMLVideoElement | null>(null)
-  const isVideo = item.heroMedia.type === 'video'
-  const heroVideoSrc = withBasePath(item.heroMedia.src)
-  const heroPosterSrc = withBasePath(item.thumbMedia.src)
-
-  useEffect(() => {
-    if (!isVideo || isVideoLoaded) return
-    const timer = window.setTimeout(() => {
-      onVideoDelayPassed(item.id)
-    }, 5000)
-    return () => window.clearTimeout(timer)
-  }, [isVideo, isVideoLoaded, item.id, onVideoDelayPassed])
-
-  useEffect(() => {
-    if (!isVideo || !stageVideoRef.current) return
-    const video = stageVideoRef.current
-
-    if (!isVideoLoaded) {
-      const pinFirstFrame = () => {
-        try {
-          video.currentTime = 0.05
-        } catch {
-          // Keep default frame if seek is not ready yet.
-        }
-        video.pause()
-      }
-
-      if (video.readyState >= 2) {
-        pinFirstFrame()
-      } else {
-        video.addEventListener('loadeddata', pinFirstFrame, { once: true })
-      }
-
-      return
-    }
-
-    const startPlayback = async () => {
-      try {
-        await video.play()
-      } catch {
-        // Ignore autoplay interruption and keep first frame visible.
-      }
-    }
-
-    void startPlayback()
-  }, [isVideo, isVideoLoaded, item.id])
 
   const onMouseMove = (event: React.MouseEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -457,31 +393,15 @@ function WorksStageVisual({
           aria-label={`View ${item.title} project`}
         >
           <div className="relative h-[510px] overflow-hidden rounded-[14px]">
-            {isVideo ? (
-              <video
-                key={heroVideoSrc}
-                ref={stageVideoRef}
-                className="h-full w-full object-cover transition-transform duration-500 ease-out"
-                style={{ transform: `translate3d(0, ${driftY}px, 0) scale(${hovered ? 1.08 : 1})` }}
-                src={heroVideoSrc}
-                poster={heroPosterSrc}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                autoPlay={false}
-              />
-            ) : (
-              <Image
-                src={item.thumbMedia.src}
-                alt={item.thumbMedia.alt}
-                fill
-                priority={index < 2}
-                className="object-cover transition-transform duration-500 ease-out"
-                style={{ transform: `translate3d(0, ${driftY}px, 0) scale(${hovered ? 1.08 : 1})` }}
-                sizes="(max-width: 1023px) 100vw, 80vw"
-              />
-            )}
+            <Image
+              src={item.thumbMedia.src}
+              alt={item.thumbMedia.alt}
+              fill
+              priority={index < 2}
+              className="object-cover transition-transform duration-500 ease-out"
+              style={{ transform: `translate3d(0, ${driftY}px, 0) scale(${hovered ? 1.08 : 1})` }}
+              sizes="(max-width: 1023px) 100vw, 80vw"
+            />
           </div>
           <span
             className="pointer-events-none absolute z-30 inline-flex h-9 items-center rounded-none border border-white/22 bg-white/[0.12] px-3 text-[11px] font-medium uppercase tracking-[0.12em] text-white/95 backdrop-blur-md"
