@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { Project } from '@/data/projects'
+import { withBasePath } from '@/lib/with-base-path'
 import { cn } from '@/lib/utils'
 
 type WorksTimelinePageProps = {
@@ -389,6 +390,8 @@ function WorksStageVisual({
   const [chipPosition, setChipPosition] = useState({ x: 0, y: 0 })
   const stageVideoRef = useRef<HTMLVideoElement | null>(null)
   const isVideo = item.heroMedia.type === 'video'
+  const heroVideoSrc = withBasePath(item.heroMedia.src)
+  const heroPosterSrc = withBasePath(item.thumbMedia.src)
 
   useEffect(() => {
     if (!isVideo || isVideoLoaded) return
@@ -401,9 +404,23 @@ function WorksStageVisual({
   useEffect(() => {
     if (!isVideo || !stageVideoRef.current) return
     const video = stageVideoRef.current
+
     if (!isVideoLoaded) {
-      video.pause()
-      video.currentTime = 0
+      const pinFirstFrame = () => {
+        try {
+          video.currentTime = 0.05
+        } catch {
+          // Keep default frame if seek is not ready yet.
+        }
+        video.pause()
+      }
+
+      if (video.readyState >= 2) {
+        pinFirstFrame()
+      } else {
+        video.addEventListener('loadeddata', pinFirstFrame, { once: true })
+      }
+
       return
     }
 
@@ -442,16 +459,17 @@ function WorksStageVisual({
           <div className="relative h-[510px] overflow-hidden rounded-[14px]">
             {isVideo ? (
               <video
-                key={item.heroMedia.src}
+                key={heroVideoSrc}
                 ref={stageVideoRef}
                 className="h-full w-full object-cover transition-transform duration-500 ease-out"
                 style={{ transform: `translate3d(0, ${driftY}px, 0) scale(${hovered ? 1.08 : 1})` }}
-                src={item.heroMedia.src}
+                src={heroVideoSrc}
+                poster={heroPosterSrc}
                 muted
                 loop
                 playsInline
                 preload="metadata"
-                autoPlay={isVideoLoaded}
+                autoPlay={false}
               />
             ) : (
               <Image
@@ -464,15 +482,6 @@ function WorksStageVisual({
                 sizes="(max-width: 1023px) 100vw, 80vw"
               />
             )}
-            {isVideo ? (
-              <div
-                className="pointer-events-none absolute inset-0 bg-black/24"
-                style={{
-                  opacity: isVideoLoaded ? 0 : 1,
-                  transition: `opacity ${shouldReduceMotion ? 0 : 0.7}s ease`,
-                }}
-              />
-            ) : null}
           </div>
           <span
             className="pointer-events-none absolute z-30 inline-flex h-9 items-center rounded-none border border-white/22 bg-white/[0.12] px-3 text-[11px] font-medium uppercase tracking-[0.12em] text-white/95 backdrop-blur-md"

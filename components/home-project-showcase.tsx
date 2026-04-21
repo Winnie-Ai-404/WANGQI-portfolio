@@ -13,6 +13,7 @@ import {
 } from 'framer-motion'
 import { useMemo, useRef, useState } from 'react'
 import type { Project } from '@/data/projects'
+import { withBasePath } from '@/lib/with-base-path'
 
 type HomeProjectShowcaseProps = {
   projects: Project[]
@@ -82,7 +83,7 @@ function ShowcaseImageLayer({
             preload={index === 0 ? 'auto' : 'metadata'}
             aria-label={item.mediaAlt}
           >
-            <source src={item.mediaSrc} />
+            <source src={withBasePath(item.mediaSrc)} />
           </video>
         ) : (
           <Image
