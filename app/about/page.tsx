@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import Image from '@/components/base-path-image'
 import { AboutNarrativeStage } from '@/components/about-narrative-stage'
 import BlurText from '@/components/blur-text'
 import { TextType } from '@/components/text-type'

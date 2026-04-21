@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from '@/components/base-path-image'
 import { Project } from '@/data/projects'
 import BorderGlow from '@/components/BorderGlow'
 import { TagPill } from '@/components/tag-pill'
