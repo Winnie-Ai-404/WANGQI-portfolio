@@ -35,7 +35,7 @@ jobs:
 
       - name: Build static site
         env:
-          NEXT_PUBLIC_BASE_PATH: /WANGQI-portfolio
+          NEXT_PUBLIC_GH_PAGES_BASE_PATH: /WANGQI-portfolio
         run: |
           npm run build
           touch out/.nojekyll
