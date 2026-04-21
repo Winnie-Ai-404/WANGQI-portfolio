@@ -54,7 +54,7 @@ export default function AboutPage() {
             />
           </div>
 
-          <figure className="justify-self-center lg:col-span-6 lg:justify-self-end">
+          <figure className="justify-self-center lg:col-span-6 lg:justify-self-end lg:translate-x-8 xl:translate-x-14">
             <TiltedCard className="w-[min(100%,26rem)] rounded-[0.55rem] shadow-[0_28px_80px_rgba(0,0,0,0.45)]">
               <Image
                 src="/images/cv/image.png"
